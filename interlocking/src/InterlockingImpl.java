@@ -28,4 +28,31 @@ public class InterlockingImpl implements Interlocking {
   private static final Set<Integer> FREIGHT = Set.of(3, 4, 7, 11);
   private static final Set<Integer> BIDIRECTIONAL = Set.of(3, 4, 7, 9, 11);
 
+  private static final Map<Integer, List<Integer>> SOUTH = graph(SOUTH_EDGES);
+  private static final Map<Integer, List<Integer>> NORTH = graph(NORTH_EDGES);
+
+  /** A train and its fixed route through the corridor. */
+  private static final class Train {
+    final String name;
+    final List<Integer> path;
+    final boolean south;
+    final boolean passenger;
+    int index = 0;
+
+    Train(String name, List<Integer> path, boolean south) {
+      this.name = name;
+      this.path = path;
+      this.south = south;
+      this.passenger = !FREIGHT.contains(path.get(0));
+    }
+
+    int current() {
+      return path.get(index);
+    }
+
+    boolean atDestination() {
+      return index == path.size() - 1;
+    }
+  }
+
 }

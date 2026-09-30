@@ -237,4 +237,12 @@ public class InterlockingImpl implements Interlocking {
     }
   }
 
+  @Override
+  public synchronized String getSection(int trackSection) throws IllegalArgumentException {
+    if (trackSection < 1 || trackSection > SECTIONS) {
+      throw new IllegalArgumentException("No such track section: " + trackSection);
+    }
+    return occupant[trackSection];
+  }
+
 }

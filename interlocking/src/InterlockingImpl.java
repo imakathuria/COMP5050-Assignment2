@@ -101,4 +101,20 @@ public class InterlockingImpl implements Interlocking {
     }
     return null;
   }
+
+  private static Train build(String name, int entry, int destination) {
+    if (ENTRY_SOUTH.contains(entry) && EXIT_SOUTH.contains(destination)) {
+      List<Integer> p = findPath(SOUTH, entry, destination);
+      if (p != null) {
+        return new Train(name, p, true);
+      }
+    }
+    if (ENTRY_NORTH.contains(entry) && EXIT_NORTH.contains(destination)) {
+      List<Integer> p = findPath(NORTH, entry, destination);
+      if (p != null) {
+        return new Train(name, p, false);
+      }
+    }
+    return null;
+  }
 }

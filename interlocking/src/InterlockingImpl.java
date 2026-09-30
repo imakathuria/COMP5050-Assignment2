@@ -245,4 +245,12 @@ public class InterlockingImpl implements Interlocking {
     return occupant[trackSection];
   }
 
+  @Override
+  public synchronized int getTrain(String trainName) throws IllegalArgumentException {
+    if (trainName == null || !known.contains(trainName)) {
+      throw new IllegalArgumentException("Unknown train: " + trainName);
+    }
+    Train t = active.get(trainName);
+    return t == null ? -1 : t.current();
+  }
 }

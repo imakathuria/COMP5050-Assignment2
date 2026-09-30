@@ -126,4 +126,24 @@ public class InterlockingImpl implements Interlocking {
         || (from == 4 && to == 3);
   }
 
+  @Override
+  public synchronized void addTrain(String trainName, int entryTrackSection,
+      int destinationTrackSection) throws IllegalArgumentException, IllegalStateException {
+    if (trainName == null || trainName.isEmpty() || active.containsKey(trainName)) {
+      throw new IllegalArgumentException("Train name missing or already in use: " + trainName);
+    }
+    Train t = build(trainName, entryTrackSection, destinationTrackSection);
+    if (t == null) {
+      throw new IllegalArgumentException(
+          "No valid path from " + entryTrackSection + " to " + destinationTrackSection);
+    }
+    if (!net.fire(PetriNet.arcs(free(entryTrackSection)),
+        PetriNet.arcs(occ(t.south, entryTrackSection)))) {
+      throw new IllegalStateException("Entry section is occupied: " + entryTrackSection);
+    }
+    occupant[entryTrackSection] = trainName;
+    active.put(trainName, t);
+    known.add(trainName);
+  }
+
 }

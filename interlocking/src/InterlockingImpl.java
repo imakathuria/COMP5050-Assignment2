@@ -146,4 +146,30 @@ public class InterlockingImpl implements Interlocking {
     known.add(trainName);
   }
 
+  @Override
+  public synchronized int moveTrains(String[] trainNames) throws IllegalArgumentException {
+    if (trainNames == null) {
+      throw new IllegalArgumentException("Train names must not be null");
+    }
+    // Validate everything first so an invalid name moves nothing.
+    Set<String> unique = new LinkedHashSet<>();
+    for (String name : trainNames) {
+      if (name == null || !active.containsKey(name)) {
+        throw new IllegalArgumentException("Train not in the corridor: " + name);
+      }
+      unique.add(name);
+    }
+    List<Train> passenger = new ArrayList<>();
+    List<Train> freight = new ArrayList<>();
+    for (String name : unique) {
+      Train t = active.get(name);
+      (t.passenger ? passenger : freight).add(t);
+    }
+    // Passenger trains go first so they win the junction. The two groups share no sections.
+    int moved = runGroup(passenger) + runGroup(freight);
+    drain("J1_PASS");
+    drain("J1_FRT");
+    return moved;
+  }
+
 }

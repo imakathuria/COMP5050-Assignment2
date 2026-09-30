@@ -230,4 +230,11 @@ public class InterlockingImpl implements Interlocking {
     return true;
   }
 
+  /** End-of-step transition: removes all tokens from a place. */
+  private void drain(String place) {
+    while (net.fire(PetriNet.arcs(place), PetriNet.arcs())) {
+      // keep firing until the place is empty
+    }
+  }
+
 }

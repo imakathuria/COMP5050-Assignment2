@@ -71,4 +71,20 @@ public class InterlockingImpl implements Interlocking {
     net.addPlace("J1_FRT", 0);
   }
 
+  private static String free(int s) {
+    return "FREE:" + s;
+  }
+
+  private static String occ(boolean south, int s) {
+    return (south ? "OCCS:" : "OCCN:") + s;
+  }
+
+  private static Map<Integer, List<Integer>> graph(int[][] edges) {
+    Map<Integer, List<Integer>> g = new HashMap<>();
+    for (int[] e : edges) {
+      g.computeIfAbsent(e[0], k -> new ArrayList<>()).add(e[1]);
+    }
+    return g;
+  }
+
 }

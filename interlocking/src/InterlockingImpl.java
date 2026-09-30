@@ -55,4 +55,20 @@ public class InterlockingImpl implements Interlocking {
     }
   }
 
+  private final PetriNet net = new PetriNet();
+  private final Map<String, Train> active = new HashMap<>();
+  private final Set<String> known = new HashSet<>();
+  private final String[] occupant = new String[SECTIONS + 1];
+
+  /** Creates an empty corridor. */
+  public InterlockingImpl() {
+    for (int s = 1; s <= SECTIONS; s++) {
+      net.addPlace(free(s), 1);
+      net.addPlace(occ(true, s), 0);
+      net.addPlace(occ(false, s), 0);
+    }
+    net.addPlace("J1_PASS", 0);
+    net.addPlace("J1_FRT", 0);
+  }
+
 }

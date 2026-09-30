@@ -87,4 +87,18 @@ public class InterlockingImpl implements Interlocking {
     return g;
   }
 
+  /** Depth-first search; the corridor is acyclic so this terminates. Null if no path. */
+  private static List<Integer> findPath(Map<Integer, List<Integer>> g, int from, int to) {
+    if (from == to) {
+      return new ArrayList<>(List.of(from));
+    }
+    for (int next : g.getOrDefault(from, List.of())) {
+      List<Integer> rest = findPath(g, next, to);
+      if (rest != null) {
+        rest.add(0, from);
+        return rest;
+      }
+    }
+    return null;
+  }
 }

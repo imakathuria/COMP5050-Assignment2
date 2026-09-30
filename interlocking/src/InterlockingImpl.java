@@ -172,4 +172,24 @@ public class InterlockingImpl implements Interlocking {
     return moved;
   }
 
+  /** Repeats passes so a train can follow the one ahead of it, until nothing else can move. */
+  private int runGroup(List<Train> group) {
+    List<Train> pending = new ArrayList<>(group);
+    int total = 0;
+    boolean progress = true;
+    while (progress) {
+      progress = false;
+      for (int i = 0; i < pending.size(); ) {
+        if (step(pending.get(i))) {
+          pending.remove(i);
+          total++;
+          progress = true;
+        } else {
+          i++;
+        }
+      }
+    }
+    return total;
+  }
+
 }

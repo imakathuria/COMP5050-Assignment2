@@ -192,4 +192,42 @@ public class InterlockingImpl implements Interlocking {
     return total;
   }
 
+  /** Attempts one move (or the exit) for a train; each train moves at most once per call. */
+  private boolean step(Train t) {
+    int cur = t.current();
+    String here = occ(t.south, cur);
+    if (t.atDestination()) {
+      net.fire(PetriNet.arcs(here), PetriNet.arcs(free(cur)));
+      occupant[cur] = null;
+      active.remove(t.name);
+      return true;
+    }
+    int next = t.path.get(t.index + 1);
+    Map<String, Integer> in = PetriNet.arcs(here, free(next));
+    Map<String, Integer> out = PetriNet.arcs(free(cur), occ(t.south, next));
+    List<String> inhibitors = new ArrayList<>();
+    for (int s : t.path.subList(t.index + 1, t.path.size())) {
+      if (BIDIRECTIONAL.contains(s)) {
+        inhibitors.add(occ(!t.south, s));
+      }
+    }
+    if (crossesJunction(cur, next)) {
+      if (t.passenger) {
+        inhibitors.add("J1_FRT");
+        out.merge("J1_PASS", 1, Integer::sum);
+      } else {
+        inhibitors.add("J1_PASS");
+        inhibitors.add("J1_FRT");
+        out.merge("J1_FRT", 1, Integer::sum);
+      }
+    }
+    if (!net.fire(in, out, inhibitors)) {
+      return false;
+    }
+    occupant[cur] = null;
+    occupant[next] = t.name;
+    t.index++;
+    return true;
+  }
+
 }

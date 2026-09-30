@@ -117,4 +117,13 @@ public class InterlockingImpl implements Interlocking {
     }
     return null;
   }
+
+  /** Moves that pass through junction J1, where freight crosses the passenger tracks. */
+  private static boolean crossesJunction(int from, int to) {
+    return (from == 1 && to == 5)
+        || (from == 6 && to == 2)
+        || (from == 3 && to == 4)
+        || (from == 4 && to == 3);
+  }
+
 }

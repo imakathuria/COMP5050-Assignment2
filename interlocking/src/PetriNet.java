@@ -14,4 +14,10 @@ public class PetriNet {
   public void addPlace(String place, int tokens) {
     marking.put(place, tokens);
   }
+
+  /** Returns the tokens in a place (0 for unknown places). */
+  public int tokens(String place) {
+    return marking.getOrDefault(place, 0);
+  }
+
 }

@@ -1,3 +1,5 @@
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,5 +29,25 @@ public class PetriNet {
       map.merge(p, 1, Integer::sum);
     }
     return map;
+  }
+
+  /** True if every input place holds enough tokens. */
+  public boolean isEnabled(Map<String, Integer> in) {
+    return isEnabled(in, Collections.emptyList());
+  }
+
+  /** True if inputs are satisfied and every inhibitor place is empty. */
+  public boolean isEnabled(Map<String, Integer> in, Collection<String> inhibitors) {
+    for (String p : inhibitors) {
+      if (tokens(p) > 0) {
+        return false;
+      }
+    }
+    for (Map.Entry<String, Integer> e : in.entrySet()) {
+      if (tokens(e.getKey()) < e.getValue()) {
+        return false;
+      }
+    }
+    return true;
   }
 }

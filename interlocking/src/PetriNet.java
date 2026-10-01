@@ -50,4 +50,20 @@ public class PetriNet {
     }
     return true;
   }
+
+  /** Fires atomically; returns false (and changes nothing) if not enabled. */
+  public boolean fire(Map<String, Integer> in, Map<String, Integer> out) {
+    return fire(in, out, Collections.emptyList());
+  }
+
+  /** Fires with inhibitor arcs; returns false (and changes nothing) if not enabled. */
+  public boolean fire(
+      Map<String, Integer> in, Map<String, Integer> out, Collection<String> inhibitors) {
+    if (!isEnabled(in, inhibitors)) {
+      return false;
+    }
+    in.forEach((p, n) -> marking.merge(p, -n, Integer::sum));
+    out.forEach((p, n) -> marking.merge(p, n, Integer::sum));
+    return true;
+  }
 }

@@ -20,4 +20,12 @@ public class PetriNet {
     return marking.getOrDefault(place, 0);
   }
 
+  /** Builds an arc map; a place listed n times gets weight n. */
+  public static Map<String, Integer> arcs(String... places) {
+    Map<String, Integer> map = new HashMap<>();
+    for (String p : places) {
+      map.merge(p, 1, Integer::sum);
+    }
+    return map;
+  }
 }

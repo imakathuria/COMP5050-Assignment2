@@ -12,4 +12,10 @@ public class PetriNet_Test {
     map.put(p, n);
     return map;
   }
+  @Before
+  public void setUp() {
+    net = new PetriNet();
+    net.addPlace("A", 1);
+    net.addPlace("B", 0);
+  }
 }

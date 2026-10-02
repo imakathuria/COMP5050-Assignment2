@@ -18,4 +18,11 @@ public class PetriNet_Test {
     net.addPlace("A", 1);
     net.addPlace("B", 0);
   }
+
+
+  @Test
+  public void tokensReturnsInitialMarking() {
+    assertEquals(1, net.tokens("A"));
+    assertEquals(0, net.tokens("B"));
+  }
 }

@@ -1,8 +1,12 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-
+import org.junit.Before;
+import org.junit.Test;
 
 public class PetriNet_Test {
   private PetriNet net;
@@ -12,6 +16,7 @@ public class PetriNet_Test {
     map.put(p, n);
     return map;
   }
+
   @Before
   public void setUp() {
     net = new PetriNet();
@@ -19,10 +24,15 @@ public class PetriNet_Test {
     net.addPlace("B", 0);
   }
 
-
   @Test
   public void tokensReturnsInitialMarking() {
     assertEquals(1, net.tokens("A"));
     assertEquals(0, net.tokens("B"));
   }
+
+  @Test
+  public void unknownPlaceHasZeroTokens() {
+    assertEquals(0, net.tokens("nope"));
+  }
+
 }
